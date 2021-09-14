@@ -5,6 +5,7 @@ import me.eglp.reddit.RedditAPI;
 public enum RedditEndpoint {
 	
 	SUBREDDIT_SORT(RedditAPI.ENDPOINT + "r/%s/%s"),
+	SUBREDDIT_RANDOM(RedditAPI.ENDPOINT + "r/%s/random"),
 	SUBREDDIT_ABOUT(RedditAPI.ENDPOINT + "r/%s/about"),
 	;
 	

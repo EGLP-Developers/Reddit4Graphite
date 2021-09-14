@@ -163,6 +163,10 @@ public class Link implements ThingData {
 		return permalink;
 	}
 
+	public String getFullPermalink() {
+		return "https://reddit.com" + permalink;
+	}
+
 	public int getScore() {
 		return score;
 	}
