@@ -37,7 +37,6 @@ public class Thing<T extends ThingData> implements JSONConvertible {
 				break;
 			case "t5":
 				data = (T) JSONConverter.decodeObject(object.getJSONObject("data"), Subreddit.class);
-				System.out.println(object);
 				break;
 			default:
 				throw new UnknownKindException(object.getString("kind"));
