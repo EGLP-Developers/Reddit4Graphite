@@ -11,12 +11,6 @@ import me.mrletsplay.mrcore.json.converter.JSONConvertible;
 import me.mrletsplay.mrcore.json.converter.JSONValue;
 
 public class Thing<T extends ThingData> implements JSONConvertible {
-
-	@JSONValue
-	private String id;
-	
-	@JSONValue
-	private String name;
 	
 	@JSONValue
 	private String kind;
@@ -25,14 +19,6 @@ public class Thing<T extends ThingData> implements JSONConvertible {
 	
 	@JSONConstructor
 	private Thing() {}
-	
-	public String getID() {
-		return id;
-	}
-	
-	public String getName() {
-		return name;
-	}
 	
 	public String getKind() {
 		return kind;
@@ -51,6 +37,7 @@ public class Thing<T extends ThingData> implements JSONConvertible {
 				break;
 			case "t5":
 				data = (T) JSONConverter.decodeObject(object.getJSONObject("data"), Subreddit.class);
+				System.out.println(object);
 				break;
 			default:
 				throw new UnknownKindException(object.getString("kind"));

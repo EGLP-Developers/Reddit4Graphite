@@ -8,6 +8,12 @@ import me.mrletsplay.mrcore.json.converter.JSONValue;
 public class Link implements ThingData {
 	
 	@JSONValue
+	private String id;
+	
+	@JSONValue
+	private String name;
+	
+	@JSONValue
 	private String author;
 	
 	@JSONValue("author_flair_css_class")
@@ -97,11 +103,12 @@ public class Link implements ThingData {
 	@JSONConstructor
 	private Link() {}
 	
-	@Override
-	public void preDeserialize(JSONObject object) {
-		if(!object.isOfType("edited", JSONType.BOOLEAN)) {
-			edited = object.getLong("edited");
-		}
+	public String getID() {
+		return id;
+	}
+	
+	public String getFullName() {
+		return name;
 	}
 
 	public String getAuthor() {
@@ -214,6 +221,13 @@ public class Link implements ThingData {
 	
 	public long getCreatedUTC() {
 		return createdUTC;
+	}
+	
+	@Override
+	public void preDeserialize(JSONObject object) {
+		if(!object.isOfType("edited", JSONType.BOOLEAN)) {
+			edited = object.getLong("edited");
+		}
 	}
 	
 }

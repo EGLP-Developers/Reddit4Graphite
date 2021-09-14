@@ -10,6 +10,12 @@ import me.mrletsplay.mrcore.json.converter.JSONValue;
 public class Subreddit implements ThingData {
 	
 	@JSONValue
+	private String id;
+	
+	@JSONValue
+	private String name;
+	
+	@JSONValue
 	private int accountsActive;
 	
 	@JSONValue("comment_score_hide_mins")
@@ -66,6 +72,14 @@ public class Subreddit implements ThingData {
 	
 	@JSONConstructor
 	private Subreddit() {}
+	
+	public String getID() {
+		return id;
+	}
+	
+	public String getFullName() {
+		return name;
+	}
 
 	public int getAccountsActive() {
 		return accountsActive;
@@ -137,6 +151,10 @@ public class Subreddit implements ThingData {
 
 	public String getURL() {
 		return url;
+	}
+	
+	public String getFullURL() {
+		return "https://reddit.com" + url;
 	}
 	
 }

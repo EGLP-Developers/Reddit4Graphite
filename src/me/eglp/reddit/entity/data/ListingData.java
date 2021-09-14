@@ -6,9 +6,10 @@ import java.util.stream.Collectors;
 import me.eglp.reddit.entity.Thing;
 import me.mrletsplay.mrcore.json.converter.JSONComplexListType;
 import me.mrletsplay.mrcore.json.converter.JSONConstructor;
+import me.mrletsplay.mrcore.json.converter.JSONConvertible;
 import me.mrletsplay.mrcore.json.converter.JSONValue;
 
-public class ListingData<T extends ThingData> implements ThingData {
+public class ListingData<T extends ThingData> implements JSONConvertible {
 
 	@JSONValue
 	private String before;
