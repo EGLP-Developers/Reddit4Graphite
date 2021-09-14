@@ -13,6 +13,7 @@ import me.eglp.reddit.ratelimit.Ratelimiter;
 import me.eglp.reddit.util.ListingPaginator;
 import me.eglp.reddit.util.OAuthToken;
 import me.eglp.reddit.util.RedditEndpoint;
+import me.eglp.reddit.util.UnknownKindException;
 import me.mrletsplay.mrcore.http.HttpGet;
 import me.mrletsplay.mrcore.http.HttpPost;
 import me.mrletsplay.mrcore.http.HttpRequest;
@@ -24,8 +25,7 @@ import me.mrletsplay.mrcore.misc.FriendlyException;
 public class RedditAPI {
 	
 	public static final String
-		ENDPOINT = "https://www.reddit.com/api/v1/",
-		OAUTH_ENDPOINT = "https://oauth.reddit.com/";
+		ENDPOINT = "https://oauth.reddit.com/";
 	
 	private String clientID, clientSecret;
 	private UserAgent userAgent;
@@ -38,6 +38,14 @@ public class RedditAPI {
 		refreshToken();
 	}
 	
+	/**
+	 * Retrieves the top posts according to the provided sorting<br>
+	 * If the subreddit provided does not exist, this method will return garbage (e.g. a ListingPaginator&lt;Subreddit&gt; with subreddit search results)
+	 * @param subreddit The subreddit to retrieve posts in
+	 * @param sort The sorting method to use
+	 * @param limit The maximum amount of posts per page
+	 * @return A {@link ListingPaginator} to paginate posts, initialized with the first page
+	 */
 	@SuppressWarnings("unchecked")
 	public ListingPaginator<Link> getPosts(String subreddit, SubredditSort sort, int limit) {
 		String url = RedditEndpoint.SUBREDDIT_SORT.getURL(subreddit, sort.name().toLowerCase());
@@ -45,8 +53,18 @@ public class RedditAPI {
 		return new ListingPaginator<>(this, url, limit, l);
 	}
 	
+	/**
+	 * Retrieves information about the subreddit
+	 * @param subreddit The subreddit to retrieve information about
+	 * @return A {@link Subreddit} object or <code>null</code> if the subreddit doesn't exist
+	 */
 	public Subreddit getAbout(String subreddit) {
-		return (Subreddit) JSONConverter.decodeObject(makeGetRequest(RedditEndpoint.SUBREDDIT_ABOUT.getURL(subreddit)), Thing.class).getData();
+		try {
+			return (Subreddit) JSONConverter.decodeObject(makeGetRequest(RedditEndpoint.SUBREDDIT_ABOUT.getURL(subreddit)), Thing.class).getData();
+		}catch(UnknownKindException e) {
+			// We probably got a search listing
+			return null;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -101,30 +119,4 @@ public class RedditAPI {
 		}
 	}
 	
-	public synchronized JSONObject makePostRequest(String endpoint, String... queryParams) {
-		return makePostRequest(endpoint, true, queryParams);
-	}
-	
-	public synchronized JSONObject makePostRequest(String endpoint, boolean tokenCheck, String... queryParams) {
-		if(tokenCheck) ensureTokenValid(false);
-		Ratelimiter.waitForRatelimitIfNeeded();
-		HttpPost r = HttpRequest.createPost(endpoint);
-
-		r.setHeaderParameter("User-Agent", userAgent.getUserAgent());
-		if(token != null) r.setHeaderParameter("Authorization", "Bearer " + token.getAccessToken());
-		for(int i = 0; i < queryParams.length; i+=2) {
-			r.setQueryParameter(queryParams[i], queryParams[i+1]);
-		}
-		
-		try {
-			HttpResult res = r.execute();
-			Ratelimiter.addRequest();
-			return res.asJSONObject();
-		}catch(Exception e) {
-			if(!tokenCheck) throw e;
-			ensureTokenValid(true);
-			return makePostRequest(endpoint, false, queryParams);
-		}
-	}
-
 }

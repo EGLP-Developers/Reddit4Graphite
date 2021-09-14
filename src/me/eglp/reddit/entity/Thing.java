@@ -3,12 +3,12 @@ package me.eglp.reddit.entity;
 import me.eglp.reddit.entity.data.Link;
 import me.eglp.reddit.entity.data.Subreddit;
 import me.eglp.reddit.entity.data.ThingData;
+import me.eglp.reddit.util.UnknownKindException;
 import me.mrletsplay.mrcore.json.JSONObject;
 import me.mrletsplay.mrcore.json.converter.JSONConstructor;
 import me.mrletsplay.mrcore.json.converter.JSONConverter;
 import me.mrletsplay.mrcore.json.converter.JSONConvertible;
 import me.mrletsplay.mrcore.json.converter.JSONValue;
-import me.mrletsplay.mrcore.misc.FriendlyException;
 
 public class Thing<T extends ThingData> implements JSONConvertible {
 
@@ -53,7 +53,7 @@ public class Thing<T extends ThingData> implements JSONConvertible {
 				data = (T) JSONConverter.decodeObject(object.getJSONObject("data"), Subreddit.class);
 				break;
 			default:
-				throw new FriendlyException("Unknown kind: " + object.getString("kind"));
+				throw new UnknownKindException(object.getString("kind"));
 		}
 	}
 	

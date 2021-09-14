@@ -4,10 +4,8 @@ import me.eglp.reddit.RedditAPI;
 
 public enum RedditEndpoint {
 	
-	SUBREDDIT_SORT(RedditAPI.OAUTH_ENDPOINT + "r/%s/%s"),
-	SUBREDDIT_ABOUT(RedditAPI.OAUTH_ENDPOINT + "r/%s/about"),
-	
-	ACCESS_TOKEN(RedditAPI.ENDPOINT + "access_token")
+	SUBREDDIT_SORT(RedditAPI.ENDPOINT + "r/%s/%s"),
+	SUBREDDIT_ABOUT(RedditAPI.ENDPOINT + "r/%s/about"),
 	;
 	
 	public final String url;
