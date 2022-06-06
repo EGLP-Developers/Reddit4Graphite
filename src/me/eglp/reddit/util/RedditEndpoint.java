@@ -1,22 +1,31 @@
 package me.eglp.reddit.util;
 
+import me.eglp.apibase.util.DefaultRequestMethod;
+import me.eglp.apibase.util.Endpoint;
+import me.eglp.apibase.util.EndpointDescriptor;
 import me.eglp.reddit.RedditAPI;
 
-public enum RedditEndpoint {
+public enum RedditEndpoint implements Endpoint {
 	
-	SUBREDDIT_SORT(RedditAPI.ENDPOINT + "r/%s/%s"),
-	SUBREDDIT_RANDOM(RedditAPI.ENDPOINT + "r/%s/random"),
-	SUBREDDIT_ABOUT(RedditAPI.ENDPOINT + "r/%s/about"),
+	SUBREDDIT_SORT(EndpointDescriptor.builder(DefaultRequestMethod.GET, RedditAPI.ENDPOINT + "r/{subreddit}/{sort}")
+		.dynamicQuery("after", "after")
+		.dynamicQuery("limit", "limit")
+		.create()),
+	SUBREDDIT_RANDOM(EndpointDescriptor.builder(DefaultRequestMethod.GET, RedditAPI.ENDPOINT + "r/{subreddit}/random")
+		.create()),
+	SUBREDDIT_ABOUT(EndpointDescriptor.builder(DefaultRequestMethod.GET, RedditAPI.ENDPOINT + "r/{subreddit}/about")
+		.create()),
 	;
 	
-	public final String url;
+	private final EndpointDescriptor descriptor;
 	
-	private RedditEndpoint(String url) {
-		this.url = url;
+	private RedditEndpoint(EndpointDescriptor descriptor) {
+		this.descriptor = descriptor;
 	}
 	
-	public String getURL(String... params) {
-		return String.format(url, (Object[]) params);
+	@Override
+	public EndpointDescriptor getDescriptor() {
+		return descriptor;
 	}
 	
 }

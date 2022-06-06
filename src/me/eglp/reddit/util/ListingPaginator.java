@@ -3,6 +3,7 @@ package me.eglp.reddit.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.eglp.apibase.util.RequestParameters;
 import me.eglp.reddit.RedditAPI;
 import me.eglp.reddit.entity.Listing;
 import me.eglp.reddit.entity.data.ThingData;
@@ -10,14 +11,14 @@ import me.eglp.reddit.entity.data.ThingData;
 public class ListingPaginator<T extends ThingData> {
 	
 	private RedditAPI api;
-	private String url;
-	private int limit;
+	private RedditEndpoint endpoint;
+	private RequestParameters params;
 	private Listing<T> currentListing;
 	
-	public ListingPaginator(RedditAPI api, String url, int limit, Listing<T> initialListing) {
+	public ListingPaginator(RedditAPI api, RedditEndpoint endpoint, RequestParameters params, Listing<T> initialListing) {
 		this.api = api;
-		this.url = url;
-		this.limit = limit;
+		this.endpoint = endpoint;
+		this.params = params;
 		this.currentListing = initialListing;
 	}
 	
@@ -27,7 +28,7 @@ public class ListingPaginator<T extends ThingData> {
 	
 	public boolean next() {
 		if(currentListing.getData().getAfter() == null) return false;
-		currentListing = api.getListingAfter(url, currentListing.getData().getAfter(), limit);
+		currentListing = api.getListingAfter(endpoint, params, currentListing.getData().getAfter());
 		return true;
 	}
 	

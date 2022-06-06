@@ -1,8 +1,6 @@
 package me.eglp.reddit.util;
 
-import me.mrletsplay.mrcore.misc.FriendlyException;
-
-public class UnknownKindException extends FriendlyException {
+public class UnknownKindException extends RedditException {
 
 	private static final long serialVersionUID = 7823184646573138133L;
 
