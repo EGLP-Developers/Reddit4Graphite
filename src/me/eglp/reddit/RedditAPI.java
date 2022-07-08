@@ -94,7 +94,6 @@ public class RedditAPI extends APIBase {
 			Optional<String> loc = makeRequest(RedditEndpoint.SUBREDDIT_RANDOM, new RequestParameters().put("subreddit", subreddit)).getHeaders().firstValue("Location");
 			if(!loc.isPresent()) return null;
 			JSONArray postAndComments = new JSONArray(httpClient.send(java.net.http.HttpRequest.newBuilder(URI.create(loc.get())).build(), BodyHandlers.ofString()).body());
-			System.out.println(postAndComments);
 			Listing<Link> l = JSONConverter.decodeObject(postAndComments.getJSONObject(0), Listing.class);
 			return l.getData().getChildren().get(0);
 		} catch (IOException | InterruptedException e) {
