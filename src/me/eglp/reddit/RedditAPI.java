@@ -111,7 +111,9 @@ public class RedditAPI extends APIBase {
 	 */
 	public Subreddit getAbout(String subreddit) {
 		try {
-			return (Subreddit) JSONConverter.decodeObject(makeRequest(RedditEndpoint.SUBREDDIT_ABOUT, new RequestParameters().put("subreddit", subreddit)).asJSONObject(), Thing.class).getData();
+			JSONObject obj = makeRequest(RedditEndpoint.SUBREDDIT_ABOUT, new RequestParameters().put("subreddit", subreddit)).asJSONObject();
+			if(obj.has("error")) return null;
+			return (Subreddit) JSONConverter.decodeObject(obj, Thing.class).getData();
 		}catch(UnknownKindException e) {
 			// We probably got a search listing
 			return null;
